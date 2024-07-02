@@ -4,6 +4,9 @@ import java.io.*;
 public class Main {
 
     public static void main(String[] args) {
+//=======================================================================================
+        //IMPLEMENTING MAIN MENU
+
 
         //initializing quit variable to keep track of program status
         boolean quit = false;
@@ -24,14 +27,7 @@ public class Main {
 
 
             //prompting user to enter a choice
-            System.out.print("Enter your choice: ");
-            while (!sc.hasNextInt()) {
-                System.out.print("That's not a valid integer! Please enter an integer: ");
-                sc.next(); // discard the non-integer input
-            }
-            int choice = sc.nextInt();
-            //consuming leftover line
-            sc.nextLine();
+            int choice = getPositiveInt("Enter your choice: ");
 
             //switch case to implement the main menu
             switch (choice) {
@@ -55,7 +51,6 @@ public class Main {
                     System.out.println("Find student");
                     findStudent();
                     break;
-
                 case 5:
                     System.out.println("Store student details into file");
                     storeStudentDetailsIntoFile();
@@ -77,20 +72,19 @@ public class Main {
                             "1. Add student\n" +
                             "2. Generate summary\n" +
                             "3. Generate report\n" + RESET);
-                    int choice2 = sc.nextInt();
-                    sc.nextLine();
+                    int choice2 = getPositiveInt("Enter your choice: ");
                     switch (choice2) {
                         case 1:
                             System.out.println("Add student");
                             registerStudentObj();
-
                             break;
                         case 2:
                             System.out.println("Generate summary");
+                            generateSummary();
                             break;
                         case 3:
                             System.out.println("Generate report");
-                            generateSummary();
+                            generateReport();
                             break;
                         default:
                             System.out.println("Invalid choice");
@@ -116,7 +110,9 @@ public class Main {
 
     //defining ANSI codes for colours
     public static final String BLUE = "\033[0;34m";
+    public static final String RED = "\033[0;31m";
     public static final String RESET = "\033[0m";
+
 
     //initializing student object array
     public static Student[] studentsObj = new Student[100];
@@ -165,20 +161,10 @@ public class Main {
 
 
         //prompting user for student ID
-        String studentID;
-        //do-while loop added to prevent user from leaving entry blank
-        do {
-            System.out.print("Please enter student ID: ");
-            studentID = sc.nextLine();
-        }while(studentID.trim().isEmpty());
+        String studentID = getString("Please enter student ID: ");
 
         //prompting user for student name
-        String studentName;
-        //do-while loop added to prevent user from leaving entry blank
-        do {
-            System.out.print("Please enter name of student: ");
-            studentName = sc.nextLine();
-        }while(studentName.trim().isEmpty());
+        String studentName = getString("Please enter name of student: ");
 
         //finding empty spot in array to fit new student
         for(int i=0; i< students.length; i++){
@@ -363,6 +349,80 @@ public class Main {
         System.out.println("Number of students with marks over 40 in all exams: " + countPass);
     }
 
+
+    //implementing method to generate report
+    //iterating through studentObj array to get values
+    public static void generateReport() {
+
+        //implementing bubble sort by average and rearranging studentsObj array
+        for (int i = 0; i < studentsObj.length; i++) {
+            for (int j = i + 1; j < studentsObj.length; j++) {
+                if (studentsObj[i] != null && studentsObj[j] != null && studentsObj[i].mod.getAverage() < studentsObj[j].mod.getAverage()) {
+                    Student temp = studentsObj[i];
+                    studentsObj[i] = studentsObj[j];
+                    studentsObj[j] = temp;
+                }
+            }
+        }
+
+
+        for (int i = 0; i < studentsObj.length; i++) {
+            //checking if array slots are empty and skipping blanks
+            if(studentsObj[i] != null) {
+                //getting data from object and printing it within blocks
+                System.out.println(RED+"========================================="+RESET);
+                System.out.println("Name of student: "+studentsObj[i].getName());
+                System.out.println("ID of student: "+studentsObj[i].getID());
+                System.out.println("Mark 1: "+studentsObj[i].mod.getMark1());
+                System.out.println("Mark 2: "+studentsObj[i].mod.getMark2());
+                System.out.println("Mark 3: "+studentsObj[i].mod.getMark3());
+                System.out.println("Total: "+studentsObj[i].mod.getTotal());
+                System.out.println("Average: "+studentsObj[i].mod.getAverage());
+                System.out.println("Grade: "+studentsObj[i].mod.getGrade());
+                System.out.println(RED+"========================================="+RESET);
+
+            }
+        }
+    }
+
+
+
+
+//=================================================================================================
+    //METHODS FOR ERROR HANDLING
+
+    //implementing method to get positive integer from user
+    public static int getPositiveInt(String text) {
+        //initialising userInput variable to hold user prompt
+        //assigning value of 0 to make program run for some reason
+        int userInput = 0;
+        do{
+            try{
+                //prompting user and scanning for input
+                System.out.print(text);
+                userInput = sc.nextInt();
+                sc.nextLine();
+            }catch(Exception e){
+                System.out.println(RED+"Please enter a valid integer"+RESET);
+                //clearing buffer
+                sc.next();
+                //resetting userInput to reprompt user
+                userInput = 0;
+            }
+        }while(userInput<0 || userInput>100);
+        return userInput;
+    }
+
+    //implementing method to prompt user for valid string input
+    public static String getString(String text){
+        String userInput;
+        do{
+            //prompting user and scanning for input
+            System.out.print(text);
+            userInput = sc.nextLine();
+        }while(userInput.trim().isEmpty()); //checking if user input is blank and looping while it is blank
+        return userInput;
+    }
 
 
 }

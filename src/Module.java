@@ -3,21 +3,25 @@ import java.util.Scanner;
 public class Module {
     //creating scanner object
     static Scanner sc = new Scanner(System.in);
-    protected Module mod;
+
+    //creating student object
+    Student student = new Student();
 
     //Member variables
     private int mark1;
     private int mark2;
     private int mark3;
+    private int total;
     private double average;
     private String grade;
 
-    //Constructor
-    public Module() {
+    //Constructor for module
+    public Module(int mark1, int mark2, int mark3) {
         this.mark1 = mark1;
         this.mark2 = mark2;
         this.mark3 = mark3;
-        this.average = (mark1 + mark2 + mark3) / 3.0;
+        this.total = this.mark1 + this.mark2 + this.mark3;
+        this.average = total/ 3.0;
         this.grade = calculateGrade();
     }
 
@@ -37,22 +41,16 @@ public class Module {
     //prompting user for inputs
     public static Module promptModule() {
         //prompting user for mark 1
-        System.out.print("Please enter mark 1: ");
-        int mark1 = sc.nextInt();
-        sc.nextLine();
+        int mark1 = Main.getPositiveInt("Please enter mark 1: ");
 
         //prompting user for mark 2
-        System.out.print("Please enter mark 2: ");
-        int mark2 = sc.nextInt();
-        sc.nextLine();
+        int mark2 = Main.getPositiveInt("Please enter mark 2: ");
 
         //prompting user for mark 3
-        System.out.print("Please enter mark 3: ");
-        int mark3 = sc.nextInt();
-        sc.nextLine();
+        int mark3 = Main.getPositiveInt("Please enter mark 3: ");
 
         //creating new module object
-        return new Module();
+        return new Module(mark1, mark2, mark3);
     }
 
     //implementing getter methods for average and grade
@@ -76,6 +74,8 @@ public class Module {
         return grade;
     }
 
-
+    public int getTotal() {
+        return total;
+    }
 
 }

@@ -1,3 +1,5 @@
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.Scanner;
 
 public class Student{
@@ -6,7 +8,7 @@ public class Student{
     static Scanner sc = new Scanner(System.in);
 
     //creating module objects
-    Module mod = new Module();
+    Module mod;
 
     //declaring member variables
     private String name;
@@ -21,17 +23,6 @@ public class Student{
         this.mod = mod;
     }
 
-    //method to prompt user for student ID
-    public static String promptStudentID() {
-        //prompting user for student ID
-        String studentID;
-        //do-while loop added to prevent user from leaving entry blank
-        do {
-            System.out.print("Please enter student ID: ");
-            studentID = sc.nextLine();
-        }while(studentID.trim().isEmpty());
-        return studentID;
-    }
 
     //method to prompt user for student name
     public static String promptStudentName() {
@@ -50,10 +41,10 @@ public class Student{
     public static Student registerStudent() {
 
         //prompting user for student ID
-        String studentID = promptStudentID();
+        String studentID = Main.getString("Please enter student ID: ");
 
         //prompting user for student name
-        String studentName = promptStudentName();
+        String studentName = Main.getString("Please enter name of student: ");
 
         //getting marks from module class
         Module mod = Module.promptModule();
